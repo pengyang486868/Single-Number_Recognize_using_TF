@@ -1,11 +1,14 @@
 import os
 import tensorflow as tf
 import numpy as np
+import sys
 
 
 class Recognizer:
     def __init__(self):
-        workpath = os.getcwd()
+        # workpath = os.getcwd()
+        # workpath = sys.path[0]os.path.split(os.path.realpath(__file__))[0]
+        workpath = os.path.split(os.path.realpath(__file__))[0]
         self.modelpath = os.path.join(workpath, r'Net')
         self.sess = tf.Session()
         model_file = tf.train.latest_checkpoint(self.modelpath)
@@ -17,5 +20,5 @@ class Recognizer:
         self.keep = graph.get_tensor_by_name("keep:0")
 
     def rec(self, images):
-        result_test = self.sess.run(self.y, feed_dict={self.x: images, self.keep: 0.5})
-        return np.argmax(result_test, axis=1)
+        result = self.sess.run(self.y, feed_dict={self.x: images, self.keep: 0.5})
+        return np.argmax(result, axis=1), result

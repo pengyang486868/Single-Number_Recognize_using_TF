@@ -1,5 +1,12 @@
 import numpy as np
 import os
+from numrec import Recognizer
+from PIL import Image
 
-print(np.random.rand(2, 3, 5, 7))
-print(os.getcwd())
+r = Recognizer()
+
+path = os.path.join(os.getcwd(), r'..\Pics')
+im = Image.open(os.path.join(path, 'single3.jpg'))
+imraw = [np.array(im)[:, :, 0].flatten()]
+
+print(r.rec(imraw))
