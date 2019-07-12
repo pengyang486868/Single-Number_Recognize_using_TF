@@ -1,7 +1,6 @@
 import os
 import tensorflow as tf
 import numpy as np
-import sys
 
 
 class Recognizer:
@@ -19,6 +18,6 @@ class Recognizer:
         self.y = graph.get_tensor_by_name("y:0")
         self.keep = graph.get_tensor_by_name("keep:0")
 
-    def rec(self, images):
-        result = self.sess.run(self.y, feed_dict={self.x: images, self.keep: 0.5})
+    def rec(self, images, paramkeep=0.5):
+        result = self.sess.run(self.y, feed_dict={self.x: images, self.keep: paramkeep})
         return np.argmax(result, axis=1), result

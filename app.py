@@ -1,6 +1,5 @@
 # coding: utf-8
 from flask import Flask, jsonify, request
-import uuid
 import json
 import numpy as np
 import os
@@ -18,15 +17,36 @@ def test():
     httpargs = request.args
     im = Image.open(os.path.join(path, httpargs['path'] + '.jpg'))
     imraw = [np.array(im)[:, :, 0].flatten()]
-    return jsonify(str(r.rec(imraw)))
+    result, info = r.rec(imraw, paramkeep=0.6)
+    return jsonify({'result': str(result), 'probs': str(info)})
+
+
+# http://localhost:17088/posttest
+@app.route('/posttest', methods=['POST'])
+def posttest():
+    data = request.get_data()
+    httpargs = json.loads(data.decode('utf-8'))
+    result, info = r.rec(httpargs['img'], paramkeep=0.6)
+    return jsonify({'result': str(result), 'probs': str(info)})
 
 
 @app.route('/single', methods=['GET', 'POST'])
 def ocr():
-    pass
+    if request.method == 'GET':
+        return None
+    if request.method == 'POST':
+        data = request.get_data()
+        httpargs = json.loads(data.decode('utf-8'))
+        image_arr = httpargs['img']
+        keep_param = 0.5
+        if 'keep' in httpargs:
+            keep_param = float(httpargs['keep'])
+
+        result, info = r.rec(image_arr, paramkeep=keep_param)
+        return jsonify({'result': str(result), 'probs': str(info)})
+    return None
 
 
-
-# 启动程序
+# run server
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=17088)
