@@ -43,7 +43,8 @@ def ocr():
             keep_param = float(httpargs['keep'])
 
         result, info = r.rec(image_arr, paramkeep=keep_param)
-        return jsonify({'result': str(result), 'probs': str(info)})
+        # return jsonify({'result': str(result), 'probs': str(info)})
+        return jsonify({'result': result.tolist(), 'probs': info.tolist()})
     return None
 
 
