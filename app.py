@@ -11,6 +11,13 @@ r = Recognizer()
 path = os.path.join(os.getcwd(), r'Pics')
 
 
+# http://localhost:17088/testserver?in=kwejqhih
+@app.route('/testserver')
+def testserver():
+    httpargs = request.args
+    return jsonify({'result': True, 'input': httpargs['in']})
+
+
 # http://localhost:17088/test?path=single3
 @app.route('/test')
 def test():
